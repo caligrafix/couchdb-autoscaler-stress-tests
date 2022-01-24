@@ -1,0 +1,6 @@
+couchdb
+faker
+kubernetes
+python-dotenv
+tqdm
+Pillow
