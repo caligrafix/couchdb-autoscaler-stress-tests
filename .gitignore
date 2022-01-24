@@ -1,0 +1,13 @@
+.env
+/k8s-python
+__pycache__/
+secret.yaml
+/src/*.json
+*couch-values.yaml
+autoscaler/
+couch-json/
+charts/datadog/
+*.txt
+tests/
+*/couchdb/custom-values.yaml
+/couchdb-helm
