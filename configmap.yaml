@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: stress-test-values
 data:
-  EKS_NAMESPACE: couchdb
+  NAMESPACE: couchdb
   COUCHDB_SVC: couchdb-svc-couchdb
   COUCHDB_PORT: "5984"
   COUCHDB_DB_NAMES: db1

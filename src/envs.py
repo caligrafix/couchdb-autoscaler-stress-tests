@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Load env vars
-namespace = os.getenv('EKS_NAMESPACE')
+namespace = os.getenv('NAMESPACE')
 couchdb_user = os.getenv('adminUsername')
 couchdb_password = os.getenv('adminPassword')
 couchdb_svc = os.getenv('COUCHDB_SVC')
