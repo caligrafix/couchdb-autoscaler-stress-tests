@@ -30,5 +30,14 @@ Stress Tests Scenarios to demostrate Resilience in Couchdb Cluster.
 | 3 | Resize PVC       | Resize PVC of specific pods                              |
 
 
+# How to Run Tests
+
+On the kubernetes cluster that CouchDB is deployed, 
+apply the manifest file `stress-test.yaml` overriding container args 
+to run different scenarios (0, 1, 2, 3 are supported).
+
+```console
+foo@bar:~$ kubectl apply -f stress-test.yaml 
+```
 
 
