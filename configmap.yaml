@@ -6,7 +6,7 @@ data:
   NAMESPACE: couchdb
   COUCHDB_SVC: couchdb-svc-couchdb
   COUCHDB_PORT: "5984"
-  COUCHDB_DB_NAMES: db1
+  COUCHDB_DB_NAMES: "db1 db2"
   COUCHDB_INSERT_ROWS: "10000"
   COUCHDB_N_IT: "100"
   POD_NAMES: "couchdb-couchdb-0 couchdb-couchdb-1 couchdb-couchdb-2"

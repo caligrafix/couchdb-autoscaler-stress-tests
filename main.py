@@ -68,7 +68,7 @@ def main():
 
     else:
         raise Exception(
-            "You must provide --scenario or --script as first argument")
+            "You must provide --scenario as first argument")
 
 
 if __name__ == "__main__":
