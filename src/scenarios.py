@@ -181,6 +181,4 @@ async def create_and_query_views(couchdb_url, database, n_querys):
 
     create_view(couchdb_url, database)
 
-    session = AsyncSession(n=n_querys)
-
-    session.run(query_view(couchdb_url, database, n_querys, session))
+    query_view(couchdb_url, database, n_querys)
