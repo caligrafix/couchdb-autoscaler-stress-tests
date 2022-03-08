@@ -221,7 +221,7 @@ def create_view(couchdb_url: str, database: str):
     logging.info(f"creation view result: {res_put.json()}")
 
 
-def query_view(couchdb_url: str, database: str, n_query: int, session):
+def query_view(couchdb_url: str, database: str, n_query: int):
     view_url = couchdb_url + database + '/_design/order_by_date/_view/order_by_date'
 
     THREAD_POOL = n_query
