@@ -176,6 +176,5 @@ def create_and_query_views(couchdb_url, database, n_querys):
         }
     2. Query a view 
     '''
-    couchdb_client = get_couch_client(couchdb_url)
 
-    create_view(couchdb_client, database)
+    create_view(couchdb_url, database)
