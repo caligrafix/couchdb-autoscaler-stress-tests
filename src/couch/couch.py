@@ -5,7 +5,6 @@ import requests
 import time
 
 from requests.adapters import HTTPAdapter
-from requests_threads import AsyncSession
 from urllib3.util.retry import Retry
 from pprint import pprint
 from faker import Faker
@@ -221,10 +220,9 @@ def create_view(couchdb_url: str, database: str):
     logging.info(f"creation view result: {res_put.json()}")
 
 
-async def query_view(couchdb_url: str, database: str, n_query: int):
+async def query_view(couchdb_url: str, database: str, n_query: int, session):
     view_url = couchdb_url + database + '/_design/order_by_date/_view/order_by_date'
 
-    session = AsyncSession(n=n_query)
     responses = []
 
     for _ in range(n_query):

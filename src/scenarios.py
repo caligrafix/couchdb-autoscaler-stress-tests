@@ -1,5 +1,7 @@
 import io
 import logging
+
+from requests_threads import AsyncSession
 from tqdm import tqdm
 from src.couch.couch import *
 from src.k8s.k8s import *
@@ -162,7 +164,7 @@ def scenario_4_stress_couchdb(couchdb_url, n_rows, n_it, clear=True):
     # logging.info(map_fun)
 
 
-def create_and_query_views(couchdb_url, database, n_querys):
+async def create_and_query_views(couchdb_url, database, n_querys):
     '''
     Algorithm
 
@@ -179,4 +181,6 @@ def create_and_query_views(couchdb_url, database, n_querys):
 
     create_view(couchdb_url, database)
 
-    query_view(couchdb_url, database, n_querys)
+    session = AsyncSession(n=n_querys)
+
+    session.run(query_view(couchdb_url, database, n_querys, session))
