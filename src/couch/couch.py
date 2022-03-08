@@ -229,7 +229,7 @@ def query_view(couchdb_url: str, database: str, n_query: int):
     session = requests.Session()
 
     session.mount(
-        view_url, HTTPAdapter(pool_maxsize=THREAD_POOL,
+        'http://', HTTPAdapter(pool_maxsize=THREAD_POOL,
                               max_retries=3,
                               pool_block=True)
     )
