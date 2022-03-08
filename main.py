@@ -66,7 +66,7 @@ def main():
             scenario_4_stress_couchdb(
                 couchdb_url, n_rows, n_it, clear=True)
 
-        elif scenario == "stress-cpu":
+        elif scenario == 5:
             create_and_query_views(
                 couchdb_url, db_names="db1", n_querys=100
             )

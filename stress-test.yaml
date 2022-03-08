@@ -8,7 +8,7 @@ spec:
   containers:
   - name: couchdb-k8s-stress-tests
     image: caligrafix/couchdb-autoscaler-tests:latest
-    args: ["--scenario", "0"]
+    args: ["--scenario", "5"]
     imagePullPolicy: Always
     envFrom:
       - configMapRef:
