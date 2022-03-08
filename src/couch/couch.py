@@ -214,6 +214,17 @@ def finish_cluster_setup(couchdb_url: str):
 
 def create_view(couchdb_url: str, database: str):
 
+    #Delete view if exists
+    view_request = requests.get(couchdb_url+database+'/_design/order_by_date')
+    
+    logging.info(f"get_view_request_status: {view_request.status_code}")
+    if view_request.status == 200:
+        view_rev = view_request.json()['rev']
+        del_view = requests.delete(f'{view_request}+/rev={view_rev}')
+        logging.info(f"deleting view: {del_view.json()}")
+
+
+    #Create view
     view = '{"views":{"order_by_date":{"map":"function(doc) { if(doc.date && doc.name) { emit(doc.date, doc.name); }}"}}}'
 
     res_put = requests.put(couchdb_url + database + '/_design/order_by_date', data=view)
