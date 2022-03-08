@@ -163,7 +163,7 @@ def scenario_4_stress_couchdb(couchdb_url, n_rows, n_it, clear=True):
     # logging.info(map_fun)
 
 
-async def create_and_query_views(couchdb_url, database, n_querys):
+def create_and_query_views(couchdb_url, database, n_querys):
     '''
     Algorithm
 
