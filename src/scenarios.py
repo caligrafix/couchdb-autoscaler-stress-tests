@@ -178,3 +178,5 @@ def create_and_query_views(couchdb_url, database, n_querys):
     '''
 
     create_view(couchdb_url, database)
+
+    query_view(couchdb_url, database, n_querys)

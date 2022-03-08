@@ -2,9 +2,11 @@ import couchdb
 import logging
 import random
 import requests
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
 import time
+
+from requests.adapters import HTTPAdapter
+from requests_threads import AsyncSession
+from urllib3.util.retry import Retry
 from pprint import pprint
 from faker import Faker
 from operator import itemgetter
@@ -217,3 +219,15 @@ def create_view(couchdb_url: str, database: str):
     res_put = requests.put(couchdb_url + database + '/_design/order_by_date', data=view)
     res_put.raise_for_status()
     logging.info(f"creation view result: {res_put.json()}")
+
+
+async def query_view(couchdb_url: str, database: str, n_query: int):
+    view_url = couchdb_url + database + '/_design/order_by_date/_view/order_by_date'
+
+    session = AsyncSession(n=n_query)
+    responses = []
+
+    for _ in range(n_query):
+        responses.append(await session.get(view_url))
+    logging.info(f"Finish {n_query} concurrent requests")
+    logging.info(responses)
