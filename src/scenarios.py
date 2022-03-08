@@ -1,7 +1,6 @@
 import io
 import logging
 
-from requests_threads import AsyncSession
 from tqdm import tqdm
 from src.couch.couch import *
 from src.k8s.k8s import *
