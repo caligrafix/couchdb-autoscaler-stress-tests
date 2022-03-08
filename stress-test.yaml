@@ -11,8 +11,6 @@ spec:
     args: ["--scenario", "0"]
     imagePullPolicy: Always
     envFrom:
-      - secretRef:
-          name: couchdb-couchdb
       - configMapRef:
           name: stress-test-values
   restartPolicy: Never

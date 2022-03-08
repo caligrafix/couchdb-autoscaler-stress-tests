@@ -160,3 +160,22 @@ def scenario_4_stress_couchdb(couchdb_url, n_rows, n_it, clear=True):
         n_it -= 1
         logging.info(f"generated faked data: {n_it}")
     # logging.info(map_fun)
+
+
+def create_and_query_views(couchdb_url, database, n_querys):
+    '''
+    Algorithm
+
+    Prerequisites: Scenario 0 is executed and CouchDB is populated.
+
+    1. Create follow view
+        function(doc){
+            if(doc.date && doc.name){
+                emit(doc.date, doc.name);
+            }
+        }
+    2. Query a view 
+    '''
+    couchdb_client = get_couch_client(couchdb_url)
+
+    create_view(couchdb_client, database)

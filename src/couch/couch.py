@@ -208,3 +208,12 @@ def finish_cluster_setup(couchdb_url: str):
     res = s.post(url_string, headers=headers, data=payload)
     res.raise_for_status()
     logging.info(f'finish cluster setup response: {res.json()}')
+
+
+def create_view(couchdb_url: str, database: str):
+
+    view = '{"views":{"order_by_date":{"map":"function(doc) { if(doc.date && doc.name) { emit(doc.date, doc.name); }}"}}}'
+
+    res_put = requests.put(couchdb_url + database + '/_design/order_by_date', data=view)
+    res_put.raise_for_status()
+    logging.info(f"creation view result: {res_put.json()}")
