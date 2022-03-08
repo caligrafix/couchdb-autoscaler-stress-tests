@@ -244,7 +244,7 @@ def query_view(couchdb_url: str, database: str, n_query: int):
         return response
 
     with ThreadPoolExecutor(max_workers=THREAD_POOL) as executor:
-        for response in list(executor.map(get, view_url)):
+        for response in list(executor.map(get, [view_url])):
             if response.status_code == 200:
                 logging.info(f"response: {response.content}")
 
