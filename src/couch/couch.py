@@ -238,35 +238,37 @@ def create_view(couchdb_url: str, database: str):
 def query_view(couchdb_url: str, database: str, n_query: int):
     view_url = couchdb_url + database + '/_design/order_by_date/_view/order_by_date'
 
-    # THREAD_POOL = n_query
+    if n_query == 1:
+        get_view_result = requests.get(view_url)
+        if get_view_result.status_code != 200:
+            logging.error(f"Error {get_view_result.status_code} in {get_view_result.url}")
+        logging.info(f"request was completed in {get_view_result.elapsed.total_seconds()} seconds {get_view_result.url}")
 
-    get_view_result = requests.get(view_url)
-    if get_view_result.status_code != 200:
-        logging.error(f"Error {get_view_result.status_code} in {get_view_result.url}")
-    logging.info(f"request was completed in {get_view_result.elapsed.total_seconds()} seconds {get_view_result.url}")
-    
-    # session = requests.Session()
+    else:    
+        THREAD_POOL = n_query
 
-    # session.mount(
-    #     'http://', HTTPAdapter(pool_maxsize=THREAD_POOL,
-    #                           max_retries=3,
-    #                           pool_block=True)
-    # )
+        session = requests.Session()
 
-    # def get(url):
-    #     response = session.get(url)
-    #     logging.info(f"request was completed in {response.elapsed.total_seconds()} seconds {response.url}")
-    #     if response.status_code != 200:
-    #         logging.error(f"Error {response.status_code} in {response.url}")
-    #     elif 500 <= response.status_code < 600:
-    #         # server is overloaded? give it a break
-    #         time.sleep(5)
-    #     return response
+        session.mount(
+            'http://', HTTPAdapter(pool_maxsize=THREAD_POOL,
+                                max_retries=3,
+                                pool_block=True)
+        )
 
-    # with ThreadPoolExecutor(max_workers=THREAD_POOL) as executor:
-    #     for response in list(executor.map(get, [view_url])):
-    #         if response.status_code == 200:
-    #             logging.info(f"response: {response.content}")
+        def get(url):
+            response = session.get(url)
+            logging.info(f"request was completed in {response.elapsed.total_seconds()} seconds {response.url}")
+            if response.status_code != 200:
+                logging.error(f"Error {response.status_code} in {response.url}")
+            elif 500 <= response.status_code < 600:
+                # server is overloaded? give it a break
+                time.sleep(5)
+            return response
 
+        with ThreadPoolExecutor(max_workers=THREAD_POOL) as executor:
+            for response in list(executor.map(get, [view_url])):
+                if response.status_code == 200:
+                    logging.info(f"response: {response.content}")
+        
+        logging.info(f"Finish query {n_query} times view")
 
-    # logging.info(f"Finish {n_query} concurrent requests")

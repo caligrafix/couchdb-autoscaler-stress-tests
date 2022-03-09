@@ -68,7 +68,7 @@ def main():
 
         elif scenario == 5:
             create_and_query_views(
-                couchdb_url, database="db1", n_querys=10
+                couchdb_url, database="db1", n_querys=1
             )
 
     else:
