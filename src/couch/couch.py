@@ -219,6 +219,7 @@ def create_view(couchdb_url: str, database: str):
     
     logging.info(f"get_view_request_status: {view_request.status_code}")
     if view_request.status_code == 200:
+        logging.info(f"view_request: ", view_request.json())
         view_rev = view_request.json()['rev']
         del_view = requests.delete(f'{view_request}+/rev={view_rev}')
         logging.info(f"deleting view: {del_view.json()}")
