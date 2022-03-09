@@ -212,10 +212,10 @@ def finish_cluster_setup(couchdb_url: str):
     logging.info(f'finish cluster setup response: {res.json()}')
 
 
-def create_view(couchdb_url: str, database: str):
+def create_view(couchdb_url: str, view_name: str, view_string: str, database: str):
 
     #Delete view if exists
-    view_query = couchdb_url+database+'/_design/order_by_date' 
+    view_query = f"couchdb_url{database}/_design/{view_name}"
     view_request = requests.get(view_query)
     
     if view_request.status_code == 200:
@@ -226,11 +226,10 @@ def create_view(couchdb_url: str, database: str):
         logging.info(f"deleting view: {del_view.text}")
         del_view.raise_for_status()
 
-
     #Create view
-    view = '{"views":{"order_by_date":{"map":"function(doc) { if(doc.date && doc.name) { emit(doc.date, doc.name); }}"}}}'
+    # view = '{"views":{"order_by_date":{"map":"function(doc) { if(doc.date && doc.name) { emit(doc.date, doc.name); }}"}}}'
 
-    res_put = requests.put(couchdb_url + database + '/_design/order_by_date', data=view)
+    res_put = requests.put(couchdb_url + database + '/_design/order_by_date', data=view_string)
     res_put.raise_for_status()
     logging.info(f"creation view result: {res_put.json()}")
 

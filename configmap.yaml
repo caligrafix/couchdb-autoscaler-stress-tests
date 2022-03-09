@@ -13,3 +13,5 @@ data:
   VOLUME_THRESHOLD: "0.5"
   VOLUME_RESIZE_PERCENTAGE: "1.3"
   MOUNT_VOLUME_PATH: "opt/couchdb/data"
+  VIEW_NAME: "order_by_date"
+  VIEW_STRING: '{"views":{"order_by_date":{"map":"function(doc) { if(doc.date && doc.name) { emit(doc.date, doc.name); }}"}}}'

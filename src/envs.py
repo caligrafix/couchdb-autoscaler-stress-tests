@@ -15,6 +15,12 @@ couchdb_url = f"http://{couchdb_user}:{couchdb_password}@{couchdb_svc}:{couchdb_
 n_rows = int(os.getenv('COUCHDB_INSERT_ROWS'))
 pods = [pod for pod in os.environ.get("POD_NAMES").split(" ")]
 n_it = int(os.getenv('COUCHDB_N_IT'))
+
+#Volumes
 VOLUME_THRESHOLD = float(os.getenv('VOLUME_THRESHOLD'))
 VOLUME_RESIZE_PERCENTAGE = float(os.getenv('VOLUME_RESIZE_PERCENTAGE'))
 MOUNT_VOLUME_PATH = os.getenv('VOLUME_MOUNT_PATH')
+
+#Views
+view_name = os.getenv('VIEW_NAME')
+view_string = os.getenv('VIEW_STRING')
