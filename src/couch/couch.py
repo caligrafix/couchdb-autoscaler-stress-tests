@@ -249,13 +249,14 @@ def query_view(couchdb_url: str, database: str, n_query: int):
     )
 
     def get(url):
-        with session.get(url) as response:
-            if response.status_code != 200:
-                logging.error(f"Error {response.status_code} in {response.url}")
-            elif 500 <= response.status_code < 600:
-                # server is overloaded? give it a break
-                time.sleep(5)
-            return response
+        response = session.get(url)
+        logging.info(f"request was completed in {response.elapsed.total_seconds()} seconds {response.url}")
+        if response.status_code != 200:
+            logging.error(f"Error {response.status_code} in {response.url}")
+        elif 500 <= response.status_code < 600:
+            # server is overloaded? give it a break
+            time.sleep(5)
+        return response
 
     with ThreadPoolExecutor(max_workers=THREAD_POOL) as executor:
         for response in list(executor.map(get, [view_url])):
