@@ -215,7 +215,7 @@ def finish_cluster_setup(couchdb_url: str):
 def create_view(couchdb_url: str, view_name: str, view_string: str, database: str):
 
     #Delete view if exists
-    view_query = f"couchdb_url{database}/_design/{view_name}"
+    view_query = f"{couchdb_url}{database}/_design/{view_name}"
     view_request = requests.get(view_query)
     
     if view_request.status_code == 200:
