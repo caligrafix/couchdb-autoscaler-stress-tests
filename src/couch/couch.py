@@ -218,9 +218,9 @@ def create_view(couchdb_url: str, database: str):
     view_request = requests.get(couchdb_url+database+'/_design/order_by_date')
     
     logging.info(f"get_view_request_status: {view_request.status_code}")
-    logging.info(f"view_request text: ", view_request.text)
-    logging.info(f"view_request content: ", view_request.content)
-    logging.info(f"view_request json: ", view_request.json())
+    logging.info(f"view_request text:  {view_request.text}")
+    logging.info(f"view_request content:  {view_request.content}")
+    logging.info(f"view_request json:  {view_request.json()}")
     if view_request.status_code == 200:
         view_rev = view_request.json()['rev']
         del_view = requests.delete(f'{view_request}+/rev={view_rev}')
