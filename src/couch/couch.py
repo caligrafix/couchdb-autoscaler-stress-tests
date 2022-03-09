@@ -230,13 +230,13 @@ def create_view(couchdb_url: str, view_name: str, view_string: str, database: st
     #Create view
     # view = '{"views":{"order_by_date":{"map":"function(doc) { if(doc.date && doc.name) { emit(doc.date, doc.name); }}"}}}'
 
-    res_put = requests.put(couchdb_url + database + '/_design/order_by_date', data=view_string)
+    res_put = requests.put(f"{couchdb_url}{database}/_design/{view_name}", data=view_string)
     res_put.raise_for_status()
     logging.info(f"creation view result: {res_put.json()}")
 
 
-def query_view(couchdb_url: str, database: str, n_query: int):
-    view_url = couchdb_url + database + '/_design/order_by_date/_view/order_by_date'
+def query_view(couchdb_url: str, view_name: str, database: str, n_query: int):
+    view_url = f"{couchdb_url}{database}/_design/{view_name}/_view/{view_name}"
 
     logging.info(f"query view {n_query} times")
     if n_query == 1:
@@ -272,4 +272,3 @@ def query_view(couchdb_url: str, database: str, n_query: int):
                     logging.info(f"response: {response.content}")
         
         logging.info(f"Finish query {n_query} times view")
-
