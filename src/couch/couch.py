@@ -216,6 +216,7 @@ def create_view(couchdb_url: str, view_name: str, view_string: str, database: st
 
     #Delete view if exists
     view_query = f"{couchdb_url}{database}/_design/{view_name}"
+    logging.info(f"view_query: {view_query}")
     view_request = requests.get(view_query)
     
     if view_request.status_code == 200:
