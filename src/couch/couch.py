@@ -238,6 +238,7 @@ def create_view(couchdb_url: str, view_name: str, view_string: str, database: st
 def query_view(couchdb_url: str, database: str, n_query: int):
     view_url = couchdb_url + database + '/_design/order_by_date/_view/order_by_date'
 
+    logging.info(f"query view {n_query} times")
     if n_query == 1:
         get_view_result = requests.get(view_url)
         if get_view_result.status_code != 200:

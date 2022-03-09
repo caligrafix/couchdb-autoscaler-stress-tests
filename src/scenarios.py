@@ -177,7 +177,8 @@ def create_and_query_views(couchdb_url, view_name, view_string, database, n_quer
         }
     2. Query a view 
     '''
-
+    logging.info(f"step 1: create view")
     create_view(couchdb_url, view_name, view_string, database)
 
+    logging.info(f"step 2: query view")
     query_view(couchdb_url, database, n_querys)
