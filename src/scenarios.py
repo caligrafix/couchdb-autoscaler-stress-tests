@@ -42,6 +42,7 @@ def scenario_0_populate_couchdb(couchdb_url: str, n_rows: int, n_it: int, db_nam
     tqdm_out = TqdmToLogger(logger, level=logging.INFO)
 
     couchdb_client = get_couch_client(couchdb_url)
+    print(couchdb_client)
 
     if clear:
         clear_dbs(couchdb_client) 
