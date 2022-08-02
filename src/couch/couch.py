@@ -77,8 +77,8 @@ def populate_db(db, data):
             db.update(data)
         except Exception as e:
             logging.info(f"exception: {e}")
-            logging.info(f"sleep: 60")
-            time.sleep(60)
+            logging.info(f"sleep: 10")
+            time.sleep(10)
             continue
         break
     return
