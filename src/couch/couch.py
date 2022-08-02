@@ -268,9 +268,8 @@ def query_view(couchdb_url: str, view_name: str, database: str, n_query: int):
                 logging.info(f"Request Views N°{count}")
                 with ThreadPoolExecutor(max_workers=THREAD_POOL) as executor:
                     for response in list(executor.map(get, [view_url])):
-                        logging.info(f'response: {response}')
                         if response.status_code == 200:
-                            logging.info(f"response: {response.content}")
+                            logging.info(f"response: Success")
             except Exception as e:
                 logging.info(f"exception: {e}")
                 logging.info(f"Pods are down? - sleep: 10")
