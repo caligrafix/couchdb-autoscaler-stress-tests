@@ -266,9 +266,22 @@ def query_view(couchdb_url: str, view_name: str, database: str, n_query: int):
                 time.sleep(5)
             return response
 
-        with ThreadPoolExecutor(max_workers=THREAD_POOL) as executor:
-            for response in list(executor.map(get, [view_url])):
-                if response.status_code == 200:
-                    logging.info(f"response: {response.content}")
-        
-        logging.info(f"Finish query {n_query} times view")
+    count=0
+    while True:
+        try:
+            count+=1
+            logging.info(f"Retry {count}")
+            with ThreadPoolExecutor(max_workers=THREAD_POOL) as executor:
+                for response in list(executor.map(get, [view_url])):
+                    if response.status_code == 200:
+                        logging.info(f"response: {response.content}")
+            logging.info(f"Finish query {n_query} times view through {count} times")
+        except Exception as e:
+            logging.info(f"exception: {e}")
+            logging.info(f"Pods are down? - sleep: 10")
+            time.sleep(10)
+            continue
+        break
+
+
+
