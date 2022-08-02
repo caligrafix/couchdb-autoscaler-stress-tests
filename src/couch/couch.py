@@ -247,9 +247,7 @@ def query_view(couchdb_url: str, view_name: str, database: str, n_query: int):
 
     else:    
         THREAD_POOL = n_query
-
         session = requests.Session()
-
         session.mount(
             'http://', HTTPAdapter(pool_maxsize=THREAD_POOL,
                                 max_retries=3,
@@ -257,32 +255,29 @@ def query_view(couchdb_url: str, view_name: str, database: str, n_query: int):
         )
 
         def get(url):
-            count=0
-            while True:
-                try:
-                    count+=1
-                    response = session.get(url)
-                    logging.info(f"request was completed in {response.elapsed.total_seconds()} seconds {response.url}")
-                    if response.status_code != 200:
-                        logging.error(f"Error {response.status_code} in {response.url}")
-                except Exception as e:
-                    logging.info(f"Pods are down? - sleep: 10")
-                    time.sleep(10)
-                    continue
-                break
+            response = session.get(url)
+            logging.info(f"request was completed in {response.elapsed.total_seconds()} seconds {response.url}")
+            if response.status_code != 200:
+                logging.error(f"Error {response.status_code} in {response.url}")
+               
+        count=0
+        while True:
+            try:
+                count+=1
+                logging.info(f"Request Views")
+                with ThreadPoolExecutor(max_workers=THREAD_POOL) as executor:
+                    for response in list(executor.map(get, [view_url])):
+                        if response.status_code == 200:
+                            logging.info(f"response: {response.content}")
+            except Exception as e:
+                logging.info(f"exception: {e}")
+                logging.info(f"Pods are down? - sleep: 10")
+                time.sleep(10)
+                continue
+            break
 
+        logging.info(f"Finish query {n_query} times view through times")
 
-        try:
-            logging.info(f"Request Views")
-            with ThreadPoolExecutor(max_workers=THREAD_POOL) as executor:
-                for response in list(executor.map(get, [view_url])):
-                    if response.status_code == 200:
-                        logging.info(f"response: {response.content}")
-            logging.info(f"Finish query {n_query} times view through times")
-        except Exception as e:
-            logging.info(f"exception: {e}")
-            logging.info(f"Pods are down? - sleep: 10")
-            time.sleep(10)
 
 
 
