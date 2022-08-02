@@ -257,31 +257,32 @@ def query_view(couchdb_url: str, view_name: str, database: str, n_query: int):
         )
 
         def get(url):
-            response = session.get(url)
-            logging.info(f"request was completed in {response.elapsed.total_seconds()} seconds {response.url}")
-            if response.status_code != 200:
-                logging.error(f"Error {response.status_code} in {response.url}")
-            elif 500 <= response.status_code < 600:
-                # server is overloaded? give it a break
-                time.sleep(5)
-            return response
+            count=0
+            while True:
+                try:
+                    count+=1
+                    response = session.get(url)
+                    logging.info(f"request was completed in {response.elapsed.total_seconds()} seconds {response.url}")
+                    if response.status_code != 200:
+                        logging.error(f"Error {response.status_code} in {response.url}")
+                except Exception as e:
+                    logging.info(f"Pods are down? - sleep: 10")
+                    time.sleep(10)
+                    continue
+                break
 
-    count=0
-    while True:
+
         try:
-            count+=1
-            logging.info(f"Retry {count}")
+            logging.info(f"Request Views")
             with ThreadPoolExecutor(max_workers=THREAD_POOL) as executor:
                 for response in list(executor.map(get, [view_url])):
                     if response.status_code == 200:
                         logging.info(f"response: {response.content}")
-            logging.info(f"Finish query {n_query} times view through {count} times")
+            logging.info(f"Finish query {n_query} times view through times")
         except Exception as e:
             logging.info(f"exception: {e}")
             logging.info(f"Pods are down? - sleep: 10")
             time.sleep(10)
-            continue
-        break
 
 
 
