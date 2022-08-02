@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: couchdb-k8s-stress-tests-s-0
+  name: couchdb-k8s-stress-5
   labels:
     type: Stress-test
 spec:
   containers:
-  - name: couchdb-k8s-stress-tests
+  - name: stress-populate-database
     image: caligrafix/couchdb-autoscaler-tests:latest
     args: ["--scenario", "5"]
     imagePullPolicy: Always

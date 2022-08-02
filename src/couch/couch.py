@@ -259,6 +259,7 @@ def query_view(couchdb_url: str, view_name: str, database: str, n_query: int):
             logging.info(f"request was completed in {response.elapsed.total_seconds()} seconds {response.url}")
             if response.status_code != 200:
                 logging.error(f"Error {response.status_code} in {response.url}")
+            return response
                
         count=0
         while True:
