@@ -247,7 +247,10 @@ def query_view(couchdb_url: str, view_name: str, database: str, threads: int):
                 logging.info(f"Attempt N°{count}")
                 get_view_result = requests.get(view_url)
                 if get_view_result.status_code != 200:
-                    logging.error(f"Error {get_view_result.status_code} in {get_view_result.url}")
+                    logging.info(f"Error {get_view_result.status_code} in {get_view_result.url}")
+                if get_view_result.status_code == 504:
+                    logging.info(f"504 received: Retrying")
+                    raise Exception("504 Pods Down Exception")
             except Exception as e:
                 logging.info(f"exception: {e}")
                 logging.info(f"Pods are down? - sleep: 10")
