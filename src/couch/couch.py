@@ -244,7 +244,7 @@ def query_view(couchdb_url: str, view_name: str, database: str, threads: int):
         while True:
             count+=1
             try:
-                logging.ingo(f"Attempt N°{count}")
+                logging.info(f"Attempt N°{count}")
                 get_view_result = requests.get(view_url)
                 if get_view_result.status_code != 200:
                     logging.error(f"Error {get_view_result.status_code} in {get_view_result.url}")
