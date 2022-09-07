@@ -13,12 +13,17 @@ from operator import itemgetter
 
 
 def get_couch_client(url):
+    """Initialize the server object.
+
+        :param url: the URI of the server (for example
+                    ``http://localhost:5984/``)
+    """
     try:
         logging.info(f"Connecting to couchdb server")
         couchdb_client = couchdb.Server(url)
         return couchdb_client
-    except:
-        logging.info(f"Error connecting to couch")
+    except Exception as e:
+        logging.info(f"Error connecting to couch: {e}")
         raise Exception(
             "Error connecting to couchdb")
 
@@ -248,9 +253,7 @@ def query_view(couchdb_url: str, view_name: str, database: str, threads: int):
                 get_view_result = requests.get(view_url)
                 if get_view_result.status_code != 200:
                     logging.info(f"Error {get_view_result.status_code} in {get_view_result.url}")
-                if get_view_result.status_code == 504:
-                    logging.info(f"504 received: Retrying")
-                    raise Exception("504 Pods Down Exception")
+                    raise Exception(f"Error {get_view_result.status_code}")
             except Exception as e:
                 logging.info(f"exception: {e}")
                 logging.info(f"Pods are down? - sleep: 10")

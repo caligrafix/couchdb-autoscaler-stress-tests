@@ -37,14 +37,14 @@ def get_pods(namespace, label_selector=None, field_selector=None):
 
 
 def get_node_pods(namespace, label_selector, node_name):
-    '''
+    """
     Return a list of pods for specific node 
 
     :namespace (str)        : K8s namespace, default couchdb
     :label_selector (str)   : Selector to filter pods in k8s, default app=couchdb
     :node_name (str)        : Name of K8s node
 
-    '''
+    """
     field_selector = 'spec.nodeName='+node_name
     logging.info(f"get pods of node: {node_name}")
     pods = get_pods(namespace, label_selector=label_selector,
@@ -54,13 +54,13 @@ def get_node_pods(namespace, label_selector, node_name):
 
 
 def get_nodes_pods(nodes: list):
-    ''' 
+    """ 
     Add list of pods for nodes dictionary
 
-    :nodes (dict): List of Dictionaries with nodes information
+    :nodes (list): List of Dictionaries with nodes information
 
     Return nodes with list of pods
-    '''
+    """
     for node in nodes:
         node_pods = get_node_pods(
             namespace='couchdb', label_selector='app=couchdb', node_name=node['node'])
@@ -80,7 +80,7 @@ def delete_pods(pods, namespace):
 
 
 def watch_pods_state(pods: list, namespace: str, labels: str, desired_state: str = 'Pending'):
-    '''Watch pods state and wait until they are all in the desired desired_state state
+    """Watch pods state and wait until they are all in the desired desired_state state
 
     Args:
         pods (list)             : List of pods names
@@ -88,7 +88,7 @@ def watch_pods_state(pods: list, namespace: str, labels: str, desired_state: str
         labels (str)            : Labels to filter pods 
         desired_state (str)     : Desired state for pods
                                    
-    '''
+    """
     
     pods_desired_status = {pod: False for pod in pods}
     pods_status = {pod: None for pod in pods}
@@ -119,14 +119,14 @@ def watch_pods_state(pods: list, namespace: str, labels: str, desired_state: str
 
 
 def watch_pod_resurrect(pods: list, namespace: str, labels: str):
-    '''Watch for pod terminating and running again
+    """Watch for pod terminating and running again
 
     Args:
         pods (list)             : List of pods names
         namespace (str)         : Namespace to watch pods
         labels (str)            : Labels to filter pods 
                                    
-    '''
+    """
     pods_status = {pod: None for pod in pods}
     pods_terminating = {pod: False for pod in pods}
     pods_running_after_terminating = {pod: None for pod in pods}
@@ -160,7 +160,7 @@ def watch_pod_resurrect(pods: list, namespace: str, labels: str):
 
 
 def get_related_pod_pvc(pods: list, namespace: str):
-    '''Get associated pvc to pods
+    """Get associated pvc to pods
 
     Args:
         pods (list)     : list of pods names to get his pvc information
@@ -170,7 +170,7 @@ def get_related_pod_pvc(pods: list, namespace: str):
         pod_pvc_info (dict): Dictionary with pod name as key, and value a list 
                             with pvc name and % of usage of his associated pv. 
                             {'pod1': ['pvc1', 0.3], 'pod2': ['pvc2', 0.5],...}
-    '''
+    """
     pod_pvc_info = {}
     for pod in pods:
         pvc_info = []
@@ -200,13 +200,13 @@ def get_namespaces_pvc(namespace):
 
 
 def patch_namespaced_pvc(namespace: str, pod_pvc_info: dict, resize_percentage: float):
-    '''Patch pvc spec to increase the capacity of volumes
+    """Patch pvc spec to increase the capacity of volumes
 
     Args:
         namespace (str)             : k8s namespace to manipulate pod and pvc objects
         pod_pvc_info (dict)         : dict with pods and related pvc info
         resize_percentage (float)   : percentage to increse size of volumes
-    '''
+    """
     for pod, pvc in pod_pvc_info.items():
         pvc_size = int(pvc[1].strip('Gi'))  # Must be in Gi unit
         pvc_resize_number = int(
@@ -239,7 +239,7 @@ def execute_exec_pods(exec_command: str, namespace: str, pod: str):
 
 
 def get_pods_volumes_info(namespace: str, pods: list, mount_volume_path: str):
-    '''Get usage's percentage of each volume associated to pods
+    """Get usage percentage of each volume associated to pods
 
     Args:
         namespace (str)         : namespace used for exec command in pods
@@ -249,7 +249,7 @@ def get_pods_volumes_info(namespace: str, pods: list, mount_volume_path: str):
     Returns:
         pods_volumes_info (dict): Dictionary with pods and his % of
                                    volume usage {'pod1':'0.3', 'pod2':0.4,..., 'podN':0.1}.
-    '''
+    """
 
     exec_command = ['df', '-Ph', mount_volume_path]
     pods_volumes_info = {}

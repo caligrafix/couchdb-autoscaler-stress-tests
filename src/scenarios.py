@@ -28,26 +28,27 @@ class TqdmToLogger(io.StringIO):
 
 
 def scenario_0_populate_couchdb(couchdb_url: str, n_rows: int, n_it: int, db_names: list, clear: bool = False):
-    '''Scenario 0 - Populate COUCHDB Cluster
+    """Scenario 0 - Populate COUCHDB Cluster
 
     Args:
         couchdb_url (str): CouchDB URL Connection
         n_rows (int): Number of rows to insert in DBs
         n_it (int): Number of iterations to insert data in DBs
         db_names (list): Names of the dbs to insert data
-    '''
+    """
     logging.info(f"Executing scenario 0, populate databases")
     logging.info(f"N_ROWS: {n_rows} - N_IT: {n_it}")
-    logger = logging.getLogger()
-    tqdm_out = TqdmToLogger(logger, level=logging.INFO)
+    # logger = logging.getLogger()
+    # tqdm_out = TqdmToLogger(logger, level=logging.INFO)
 
     couchdb_client = get_couch_client(couchdb_url)
     print(couchdb_client)
 
     if clear:
-        clear_dbs(couchdb_client) 
+        clear_dbs(couchdb_client)
 
-    for i in tqdm(range(n_it), file=tqdm_out, mininterval=30,):
+    # for i in tqdm(range(n_it), file=tqdm_out, mininterval=30,):
+    for i in tqdm(range(n_it)):
         fake_data = generate_random_data(n_rows)
         populate_dbs(couchdb_client, db_names, fake_data)
 
@@ -123,7 +124,7 @@ def scenario_2_delete_some_pods(couchdb_url, namespace, n_rows, db_names, pods):
 
 
 def scenario_3_resize_pvc(namespace, pods, VOLUME_RESIZE_PERCENTAGE):
-    '''Resize pvc associate to a specific pods
+    """Resize pvc associate to a specific pods
 
     Args:
         namespace (str)                 : k8s namespace to find pods
@@ -136,7 +137,7 @@ def scenario_3_resize_pvc(namespace, pods, VOLUME_RESIZE_PERCENTAGE):
         - Terminate Pod
         - Watch status of pod and get new values to storage capacity
 
-    '''
+    """
 
     logging.info(f"executing scenario 3")
 
@@ -155,9 +156,10 @@ def scenario_4_stress_couchdb(couchdb_url, n_rows, n_it, clear=True):
     db_names = [f'python{i}' for i in range(19)]
     fake_data = generate_random_data(n_rows)
 
+    if clear:
+        clear_dbs(couch_client)
+
     while n_it > 0:
-        if clear:
-            clear_dbs(couch_client)
         populate_dbs(couch_client, db_names, fake_data)
         n_it -= 1
         logging.info(f"generated faked data: {n_it}")
@@ -165,7 +167,7 @@ def scenario_4_stress_couchdb(couchdb_url, n_rows, n_it, clear=True):
 
 
 def create_and_query_views(couchdb_url, view_name, view_string, database, n_querys):
-    '''
+    """
     Algorithm
 
     Prerequisites: Scenario 0 is executed and CouchDB is populated.
@@ -177,9 +179,28 @@ def create_and_query_views(couchdb_url, view_name, view_string, database, n_quer
             }
         }
     2. Query a view 
-    '''
+    """
     logging.info(f"step 1: create view")
     create_view(couchdb_url, view_name, view_string, database)
 
     logging.info(f"step 2: query view")
     query_view(couchdb_url, view_name, database, n_querys)
+
+
+# def scenario_6_check_connectivity():
+#     """ Algorithm
+    
+#     Prerequisited: 
+
+#     Created and populated a database view 
+    
+#     Create a database and populate with data
+
+#     Check where is each shard of data consumed (Nodes)
+
+#     Read data (make query)
+
+#     Evict pods that doesn't contain the data reading
+
+#     Check if connection is interrupted
+#     """
