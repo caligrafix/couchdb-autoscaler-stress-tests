@@ -181,10 +181,14 @@ def create_and_query_views(couchdb_url, view_name, view_string, database, n_quer
     2. Query a view 
     """
     logging.info(f"step 1: create view")
-    create_view(couchdb_url, view_name, view_string, database)
+    view_response = create_view(couchdb_url, view_name, view_string, database)
 
-    logging.info(f"step 2: query view")
-    query_view(couchdb_url, view_name, database, n_querys)
+    if view_response:
+        logging.info(f"Sleeping 1 minute before query view in order to process the results more quickly")
+        time.sleep(60)
+
+        logging.info(f"step 2: query view")
+        query_view(couchdb_url, view_name, database, n_querys)
 
 
 # def scenario_6_check_connectivity():

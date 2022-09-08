@@ -225,23 +225,27 @@ def create_view(couchdb_url: str, view_name: str, view_string: str, database: st
     view_request = requests.get(view_query)
     
     if view_request.status_code == 200:
+        logging.info(f"VIEW ALREADY EXIST: {view_query}")
         view_rev = view_request.json()['_rev']
         delete_query = f"{view_query}?rev={view_rev}"
-        logging.info(delete_query)
+        logging.info(f"DELETE VIEW QUERY: {delete_query}")
         del_view = requests.delete(delete_query)
-        logging.info(f"deleting view: {del_view.text}")
+        logging.info(f"DELETE VIEW RESPONSE: {del_view.text}")
         del_view.raise_for_status()
 
     #Create view
     # view = '{"views":{"order_by_date":{"map":"function(doc) { if(doc.date && doc.name) { emit(doc.date, doc.name); }}"}}}'
-
-    res_put = requests.put(f"{couchdb_url}{database}/_design/{view_name}", data=view_string)
-    res_put.raise_for_status()
-    logging.info(f"creation view result: {res_put.json()}")
+    else:
+        logging.info(f"VIEW DOESN'T EXIST, CREATING...")
+        res_put = requests.put(f"{couchdb_url}{database}/_design/{view_name}", data=view_string)
+        res_put.raise_for_status()
+        logging.info(f"creation view result: {res_put.json()}")
+        return True
 
 
 def query_view(couchdb_url: str, view_name: str, database: str, threads: int):
     view_url = f"{couchdb_url}{database}/_design/{view_name}/_view/{view_name}"
+    params = {'stable': 'false', 'update': 'false'}
 
     logging.info(f"query view {threads} times")
     if threads == 1:
@@ -250,7 +254,7 @@ def query_view(couchdb_url: str, view_name: str, database: str, threads: int):
             count+=1
             try:
                 logging.info(f"Attempt N°{count}")
-                get_view_result = requests.get(view_url)
+                get_view_result = requests.get(view_url, params=params)
                 if get_view_result.status_code != 200:
                     logging.info(f"Error {get_view_result.status_code} in {get_view_result.url}")
                     raise Exception(f"Error {get_view_result.status_code}")
