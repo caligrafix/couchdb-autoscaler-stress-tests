@@ -235,14 +235,12 @@ def create_view(couchdb_url: str, view_name: str, view_string: str, database: st
 
     #Create view
     # view = '{"views":{"order_by_date":{"map":"function(doc) { if(doc.date && doc.name) { emit(doc.date, doc.name); }}"}}}'
-    else:
-        logging.info(f"VIEW DOESN'T EXIST, CREATING...")
-        res_put = requests.put(f"{couchdb_url}{database}/_design/{view_name}", data=view_string)
-        res_put.raise_for_status()
-        logging.info(f"creation view result: {res_put.json()}")
-        return True
-
+    logging.info(f"VIEW DOESN'T EXIST, CREATING...")
+    res_put = requests.put(f"{couchdb_url}{database}/_design/{view_name}", data=view_string)
+    res_put.raise_for_status()
+    logging.info(f"creation view result: {res_put.json()}")
     return True
+
 
 def query_view(couchdb_url: str, view_name: str, database: str, threads: int):
     view_url = f"{couchdb_url}{database}/_design/{view_name}/_view/{view_name}"
