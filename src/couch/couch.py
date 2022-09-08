@@ -242,6 +242,7 @@ def create_view(couchdb_url: str, view_name: str, view_string: str, database: st
         logging.info(f"creation view result: {res_put.json()}")
         return True
 
+    return True
 
 def query_view(couchdb_url: str, view_name: str, database: str, threads: int):
     view_url = f"{couchdb_url}{database}/_design/{view_name}/_view/{view_name}"
